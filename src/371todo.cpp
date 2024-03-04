@@ -151,7 +151,19 @@ cxxopts::Options App::cxxoptsSetup()
 App::Action App::parseActionArgument(cxxopts::ParseResult &args)
 {
     std::string input = args["action"].as<std::string>();
-    return Action::JSON;
+    // to lowercase
+    std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+
+    if (!input.compare("create"))
+        return Action::CREATE;
+    else if (!input.compare("json"))
+        return Action::JSON;
+    else if (!input.compare("update"))
+        return Action::UPDATE;
+    else if (!input.compare("delete"))
+        return Action::DELETE;
+
+    throw std::invalid_argument("action");
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
