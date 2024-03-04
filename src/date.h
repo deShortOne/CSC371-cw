@@ -29,6 +29,15 @@ private:
 
 public:
     Date();
+    void setDateFromString(std::string date);
+    bool isInitialised() const;
+    std::string str() const;
+    void setDate(const int year, const int month, const int day);
+    unsigned int getYear() const;
+    unsigned int getMonth() const;
+    unsigned int getDay() const;
+    bool operator==(const Date &rhs) const;
+    bool operator<(const Date &rhs) const;
 };
 
 #endif // DATE_H
