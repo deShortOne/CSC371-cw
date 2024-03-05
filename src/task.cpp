@@ -169,7 +169,7 @@ std::string Task::str() const
 {
     std::stringstream ss;
     ss << "\"" << this->ident << "\":{"
-       << "\"completed\":" << this->complete
+       << "\"completed\":" << (this->complete ? "true" : "false") // TODO!!! surely there's a better way..
        << ",\"dueDate\":\"" << this->dueDate.str() << "\""
 
        << ",\"tags\":[";
