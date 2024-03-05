@@ -49,7 +49,7 @@ int App::run(int argc, char *argv[])
     TodoList tlObj{};
 
     // Only uncomment this once you have implemented the load function!
-    // tlObj.load(db);
+    tlObj.load(db);
 
     const Action a = parseActionArgument(args);
     switch (a)
@@ -59,7 +59,7 @@ int App::run(int argc, char *argv[])
         break;
 
     case Action::JSON:
-        throw std::runtime_error("json not implemented");
+        std::cout << tlObj.str();
         break;
 
     case Action::UPDATE:
