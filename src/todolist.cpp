@@ -243,8 +243,6 @@ bool TodoList::load(std::string filename)
 //  tObj.save("database.json");
 bool TodoList::save(std::string filename)
 {
-    std::cout << std::endl
-              << this->str() << std::endl;
     auto jsonToSave = json::parse(this->str());
 
     std::ofstream myFile;
@@ -289,7 +287,7 @@ std::string TodoList::str() const
         ss << project.str()
            << ",";
     }
-    ss.seekp(-2, ss.cur); // remove last ,
+    ss.seekp(-1, ss.cur); // remove last ,
 
     ss << "}";
     return ss.str();

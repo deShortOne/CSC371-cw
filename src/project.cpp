@@ -189,15 +189,14 @@ std::string Project::str() const
 {
 
     std::stringstream ss;
-    ss << "{"
-       << "\"" << this->ident << "\":";
+    ss << "\"" << this->ident << "\":{";
 
     for (const Task &i : this->tasks)
     {
-        ss << "" << i.str() << ",";
+        ss << i.str() << ",";
     }
     ss.seekp(-1, ss.cur); // remove last ,
-
     ss << "}";
+
     return ss.str();
 }

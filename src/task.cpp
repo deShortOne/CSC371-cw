@@ -168,8 +168,7 @@ bool Task::operator==(const Task &rhs) const
 std::string Task::str() const
 {
     std::stringstream ss;
-    ss << "{"
-       << "\"" << this->ident << "\":{"
+    ss << "\"" << this->ident << "\":{"
        << "\"completed\":" << this->complete
        << ",\"dueDate\":\"" << this->dueDate.str() << "\""
 
@@ -181,6 +180,6 @@ std::string Task::str() const
     }
     ss.seekp(-1, ss.cur); // remove last ,
 
-    ss << "]}}";
+    ss << "]}";
     return ss.str();
 }
