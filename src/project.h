@@ -25,6 +25,7 @@ using TaskContainer = std::vector<Task>;
 
 class Project
 {
+private:
     std::string ident;
     TaskContainer tasks;
 
