@@ -6,6 +6,10 @@
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/44636
 // -----------------------------------------------------
+#include <fstream>
+#include <iostream>
+
+#include "lib_json.hpp"
 #include "todolist.h"
 
 // TODO Write a TodoList constructor that takes no parameters and constructs an
@@ -13,14 +17,17 @@
 //
 // Example:
 //  TodoList tObj{};
-
+TodoList::TodoList() : todoList(std::vector<Project>()) {}
 // TODO Write a function, size, that takes no parameters and returns an unsigned
 //  int of the number of projects the TodoList contains.
 //
 // Example:
 //  TodoList tObj{};
 //  auto size = tObj.size();
-
+unsigned int TodoList::size() const
+{
+    return this->todoList.size();
+}
 // TODO Write a function, newProject, that takes one parameter, a project
 //  identifier, and returns the Project object as a reference. If an object
 //  with the same identifier already exists, then the existing object should be
@@ -30,7 +37,20 @@
 // Example:
 //  TodoList tObj{};
 //  tObj.newProject("projectIdent");
+Project TodoList::newProject(std::string projectIdent)
+{
+    for (const Project &i : todoList)
+    {
+        if (!i.getIdent().compare(projectIdent))
+        {
+            return i;
+        }
+    }
 
+    Project newProj{projectIdent};
+    this->todoList.push_back(newProj);
+    return this->todoList[todoList.size() - 1];
+}
 // TODO Write a function, addProject, that takes one parameter, a Project
 //  object, and returns true if the object was successfully inserted. If an
 //  object with the same identifier already exists, then the contents should be
@@ -42,7 +62,23 @@
 //  TodoList tObj{};
 //  Project cObj{"projectIdent"};
 //  tObj.addProject(cObj);
+bool TodoList::addProject(Project project)
+{
+    for (Project &i : this->todoList)
+    {
+        if (!i.getIdent().compare(project.getIdent()))
+        {
+            // for (const Task &j : project.getTasks())
+            // {
+            //     i.addTask(j);
+            // }
+            return false;
+        }
+    }
 
+    this->todoList.push_back(project);
+    return true;
+}
 // TODO Write a function, getProject, that takes one parameter, a Project
 //  identifier and returns the Project. If no Project exists, throw an
 //  appropriate exception.
@@ -51,7 +87,17 @@
 //  TodoList tObj{};
 //  tObj.newProject("projectIdent");
 //  auto cObj = tObj.getProject("projectIdent");
-
+Project TodoList::getProject(std::string projectIdent) const
+{
+    for (const Project &i : this->todoList)
+    {
+        if (i.getIdent().compare(projectIdent) == 0)
+        {
+            return i;
+        }
+    }
+    throw std::out_of_range("That project doesn't exist!");
+}
 // TODO Write a function, deleteProject, that takes one parameter, a Project
 //  identifier, and deletes it from the container, and returns true if the
 //  Project was deleted. If no Project exists, throw an appropriate exception.
@@ -60,7 +106,18 @@
 //  TodoList tObj{};
 //  tObj.newProject("projectIdent");
 //  tObj.deleteProject("projectIdent");
-
+bool TodoList::deleteProject(std::string projectIdent)
+{
+    for (unsigned int i = 0; i < this->todoList.size(); i++)
+    {
+        if (!this->todoList[i].getIdent().compare(projectIdent))
+        {
+            this->todoList.erase(this->todoList.begin() + i);
+            return true;
+        }
+    }
+    throw std::out_of_range("That project doesn't exist!");
+}
 // TODO Write a function, load, that takes one parameter, a std::string,
 //  containing the filename for the database. Open the file, read the contents,
 //  and populates the container for this TodoList. If the file does open throw
@@ -130,7 +187,15 @@
 // Example:
 //  TodoList tObj{};
 //  tObj.load("database.json");
-
+// NOT IMPLEMENTED
+bool TodoList::load(std::string filename)
+{
+    using json = nlohmann::json;
+    std::ifstream f(filename);
+    json data = json::parse(f);
+    std::cout << data;
+    return false;
+}
 // TODO Write a function, save, that takes one parameter, the path of the file
 //  to write the database to. The function should serialise the TodoList object
 //  as JSON.
@@ -140,7 +205,11 @@
 //  tObj.load("database.json");
 //  ...
 //  tObj.save("database.json");
-
+// NOT IMPLEMENTED
+bool TodoList::save(std::string filename)
+{
+    return false;
+}
 // TODO Write an == operator overload for the TodoList class, such that two
 //  TodoList objects are equal only if they have the exact same data.
 //
@@ -150,7 +219,11 @@
 //  if(tObj1 == tObj2) {
 //    ...
 //  }
-
+// NOT IMPLEMENTED
+bool operator==(const TodoList &c1, const TodoList &c2)
+{
+    return false;
+}
 // TODO Write a function, str, that takes no parameters and returns a
 //  std::string of the JSON representation of the data in the TodoList.
 //
@@ -160,3 +233,8 @@
 // Example:
 //  TodoList tObj{};
 //  std::string s = tObj.str();
+// NOT IMPLEMENTED
+std::string TodoList::str() const
+{
+    return "";
+}
