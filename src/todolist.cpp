@@ -8,9 +8,12 @@
 // -----------------------------------------------------
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 #include "lib_json.hpp"
 #include "todolist.h"
+
+using namespace nlohmann; // TODO!!! using namespace for json::parse in save()
 
 // TODO Write a TodoList constructor that takes no parameters and constructs an
 //  empty todolist.
@@ -187,13 +190,46 @@ bool TodoList::deleteProject(std::string projectIdent)
 // Example:
 //  TodoList tObj{};
 //  tObj.load("database.json");
-// NOT IMPLEMENTED
 bool TodoList::load(std::string filename)
 {
     using json = nlohmann::json;
     std::ifstream f(filename);
     json data = json::parse(f);
-    std::cout << data;
+
+    for (json::iterator project_iter = data.begin(); project_iter != data.end(); ++project_iter)
+    {
+        Project newProject{project_iter.key()};
+        auto taskList = project_iter.value();
+
+        for (auto task = taskList.begin(); task != taskList.end(); ++task)
+        {
+            Task newTask{task.key()};
+
+            auto taskValues = task.value();
+            if (taskValues.contains("completed"))
+            {
+                newTask.setComplete(taskValues["completed"].dump().compare("false"));
+            }
+            if (taskValues.contains("dueDate"))
+            {
+                std::string dateArgs = taskValues["dueDate"].dump().substr(1, 10);
+                Date date{};
+                date.setDateFromString(dateArgs);
+                newTask.setDueDate(date);
+            }
+            if (taskValues.contains("tags"))
+            {
+                auto tagLis = taskValues["tags"];
+                for (auto tag = tagLis.begin(); tag != tagLis.end(); ++tag)
+                {
+                    std::string tagName = (*tag).dump();
+                    newTask.addTag(tagName.substr(1, tagName.size() - 2));
+                }
+            }
+            newProject.addTask(newTask);
+        }
+        this->todoList.push_back(newProject); // TODO!!!! Don't like how we have to add at the end
+    }
     return false;
 }
 // TODO Write a function, save, that takes one parameter, the path of the file
@@ -205,10 +241,21 @@ bool TodoList::load(std::string filename)
 //  tObj.load("database.json");
 //  ...
 //  tObj.save("database.json");
-// NOT IMPLEMENTED
 bool TodoList::save(std::string filename)
 {
-    return false;
+    std::cout << std::endl
+              << this->str() << std::endl;
+    auto jsonToSave = json::parse(this->str());
+
+    std::ofstream myFile;
+    myFile.open(filename, std::ios_base::out);
+    if (!myFile.is_open())
+    {
+        throw std::exception();
+    }
+    myFile << jsonToSave;
+    myFile.close();
+    return true;
 }
 // TODO Write an == operator overload for the TodoList class, such that two
 //  TodoList objects are equal only if they have the exact same data.
@@ -219,7 +266,7 @@ bool TodoList::save(std::string filename)
 //  if(tObj1 == tObj2) {
 //    ...
 //  }
-// NOT IMPLEMENTED
+// NOT IMPLEMENTED!
 bool operator==(const TodoList &c1, const TodoList &c2)
 {
     return false;
@@ -233,8 +280,17 @@ bool operator==(const TodoList &c1, const TodoList &c2)
 // Example:
 //  TodoList tObj{};
 //  std::string s = tObj.str();
-// NOT IMPLEMENTED
 std::string TodoList::str() const
 {
-    return "";
+    std::stringstream ss;
+    ss << "{";
+    for (const Project &project : todoList)
+    {
+        ss << project.str()
+           << ",";
+    }
+    ss.seekp(-2, ss.cur); // remove last ,
+
+    ss << "}";
+    return ss.str();
 }
