@@ -16,8 +16,31 @@
 #ifndef TASK_H
 #define TASK_H
 
+#include <set>
+#include "date.h"
+
 class Task
 {
+private:
+    std::string ident;
+    std::set<std::string> tagContainer;
+    Date dueDate;
+    bool complete;
+
+public:
+    Task(std::string ident);
+    std::string getIdent() const;
+    void setIdent(const std::string ident);
+    bool addTag(const std::string tag);
+    bool deleteTag(const std::string tag);
+    unsigned int numTags() const;
+    bool containsTag(const std::string tag) const;
+    Date getDueDate() const;
+    void setDueDate(const Date dueDate);
+    void setComplete(const bool isComplete);
+    bool isComplete() const;
+    bool operator==(const Task &rhs) const;
+    std::string str() const;
 };
 
 #endif // TASK_H
