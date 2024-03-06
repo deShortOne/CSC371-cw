@@ -26,7 +26,7 @@ public:
     unsigned int size() const;
     Project newProject(std::string projectIdent);
     bool addProject(Project project);
-    Project getProject(std::string projectIdent) const;
+    Project &getProject(std::string projectIdent);
     bool deleteProject(std::string projectIdent);
     bool load(std::string filename);
     bool save(std::string filename);

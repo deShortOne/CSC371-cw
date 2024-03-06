@@ -90,9 +90,9 @@ bool TodoList::addProject(Project project)
 //  TodoList tObj{};
 //  tObj.newProject("projectIdent");
 //  auto cObj = tObj.getProject("projectIdent");
-Project TodoList::getProject(std::string projectIdent) const
+Project &TodoList::getProject(std::string projectIdent)
 {
-    for (const Project &i : this->todoList)
+    for (Project &i : this->todoList)
     {
         if (i.getIdent().compare(projectIdent) == 0)
         {
@@ -247,7 +247,7 @@ bool TodoList::save(std::string filename)
     auto jsonToSave = json::parse(this->str());
 
     std::ofstream myFile;
-    myFile.open(filename, std::ios_base::out);
+    myFile.open(filename, std::ios_base::out | std::ofstream::trunc);
     if (!myFile.is_open())
     {
         throw std::exception();
