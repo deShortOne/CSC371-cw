@@ -129,7 +129,7 @@ std::string Date::str() const
 // Example:
 //  Date d = Date();
 //  d.setDate(2024, 1, 1);
-void Date::setDate(const int year, const int month, const int day)
+void Date::setDate(const unsigned int year, const unsigned int month, const unsigned int day)
 {
     this->year = year;
     this->month = month;
@@ -142,7 +142,7 @@ void Date::setDate(const int year, const int month, const int day)
 //  auto year = d.getYear();
 unsigned int Date::getYear() const
 {
-    return initialized ? this->year : -1;
+    return initialized ? this->year : 0;
 }
 
 // TODO Write a function, getMonth, that takes no parameters and returns month
@@ -151,7 +151,7 @@ unsigned int Date::getYear() const
 //  auto month = d.getMonth();
 unsigned int Date::getMonth() const
 {
-    return initialized ? this->month : -1;
+    return initialized ? this->month : 0;
 }
 
 // TODO Write a function, getDay, that takes no parameters and returns day
@@ -160,7 +160,7 @@ unsigned int Date::getMonth() const
 //  auto day = d.getDay();
 unsigned int Date::getDay() const
 {
-    return initialized ? this->day : -1;
+    return initialized ? this->day : 0;
 }
 
 // TODO Write an == operator overload for the Date class, such that two

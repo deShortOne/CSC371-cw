@@ -32,7 +32,7 @@ public:
     void setDateFromString(std::string date);
     bool isInitialised() const;
     std::string str() const;
-    void setDate(const int year, const int month, const int day);
+    void setDate(const unsigned int year, const unsigned int month, const unsigned int day);
     unsigned int getYear() const;
     unsigned int getMonth() const;
     unsigned int getDay() const;
