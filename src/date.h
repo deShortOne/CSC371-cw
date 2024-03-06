@@ -19,6 +19,7 @@
 #ifndef DATE_H
 #define DATE_H
 
+#include <regex>
 #include "lib_json.hpp"
 
 class Date
@@ -28,8 +29,13 @@ private:
     bool initialized;
 
 public:
+    static std::regex dateRegex;
+    static bool isValidDate(const unsigned int year, const unsigned int month, const unsigned int day);
+
     Date();
-    void setDateFromString(std::string date);
+    Date(std::string date);
+    void resetValues();
+    void setDateFromString(const std::string dateArgs);
     bool isInitialised() const;
     std::string str() const;
     void setDate(const unsigned int year, const unsigned int month, const unsigned int day);
