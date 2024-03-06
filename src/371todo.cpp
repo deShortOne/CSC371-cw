@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <vector>
 
 #include "371todo.h"
 #include "lib_cxxopts.hpp"
@@ -55,9 +57,33 @@ int App::run(int argc, char *argv[])
     switch (a)
     {
     case Action::CREATE:
-        throw std::runtime_error("create not implemented");
-        break;
+    {
+        Project newProject{args["project"].as<std::string>()};
+        if (args.count("task"))
+        {
+            Task task{args["task"].as<std::string>()};
+            if (args.count("tag"))
+            {
+                std::string tagLis = args["tag"].as<std::string>();
+                std::stringstream test(tagLis);
+                std::string segment;
+                std::vector<std::string> seglist;
+                while (std::getline(test, segment, '_'))
+                {
+                    task.addTag(segment);
+                }
+            }
+            newProject.addTask(task);
+        }
 
+        TodoList tlObjNew{};
+        tlObjNew.addProject(newProject);
+
+        std::cout << tlObjNew.str();
+
+        tlObjNew.save(db);
+        break;
+    }
     case Action::JSON:
         std::cout << tlObj.str();
         break;
