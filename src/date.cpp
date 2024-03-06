@@ -39,7 +39,7 @@ void Date::setDateFromString(std::string dateArgs)
         dateArgs.substr(4, 1).compare("-") ||
         dateArgs.substr(7, 1).compare("-"))
     {
-        throw std::runtime_error("Invalid date argument, ensure format is YYYY-MM-DD");
+        throw std::runtime_error("Invalid date argument, ensure format is YYYY-MM-DD, got '" + dateArgs + "'");
     }
 
     try
