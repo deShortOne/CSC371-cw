@@ -35,8 +35,8 @@ public:
     bool deleteTag(const std::string tag);
     unsigned int numTags() const;
     bool containsTag(const std::string tag) const;
-    Date getDueDate() const;
-    void setDueDate(const Date dueDate);
+    Date &getDueDate();
+    void setDueDate(const Date &dueDate);
     void setComplete(const bool isComplete);
     bool isComplete() const;
     bool operator==(const Task &rhs) const;
