@@ -171,14 +171,16 @@ std::string Task::str() const
     ss << "\"" << this->ident << "\":{"
        << "\"completed\":" << (this->complete ? "true" : "false") // TODO!!! surely there's a better way..
        << ",\"dueDate\":\"" << this->dueDate.str() << "\""
-
        << ",\"tags\":[";
 
-    for (const std::string &i : this->tagContainer)
+    if (this->tagContainer.size())
     {
-        ss << "\"" << i << "\",";
+        for (const std::string &i : this->tagContainer)
+        {
+            ss << "\"" << i << "\",";
+        }
+        ss.seekp(-1, ss.cur); // remove last ,
     }
-    ss.seekp(-1, ss.cur); // remove last ,
 
     ss << "]}";
     return ss.str();

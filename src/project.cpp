@@ -187,7 +187,10 @@ bool operator==(const Project &c1, const Project &c2)
 //  std::string s = pObj.str();
 std::string Project::str() const
 {
-
+    if (tasks.empty())
+    {
+        return "\"" + this->ident + "\":{}";
+    }
     std::stringstream ss;
     ss << "\"" << this->ident << "\":{";
 

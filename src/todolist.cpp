@@ -212,7 +212,8 @@ bool TodoList::load(std::string filename)
             }
             if (taskValues.contains("dueDate"))
             {
-                std::string dateArgs = taskValues["dueDate"].dump().substr(1, 10);
+                std::string jsonToDate = taskValues["dueDate"].dump();
+                std::string dateArgs = jsonToDate.substr(1, jsonToDate.length() - 2);
                 Date date{};
                 date.setDateFromString(dateArgs);
                 newTask.setDueDate(date);
@@ -280,6 +281,10 @@ bool operator==(const TodoList &c1, const TodoList &c2)
 //  std::string s = tObj.str();
 std::string TodoList::str() const
 {
+    if (todoList.empty())
+    {
+        return "{}";
+    }
     std::stringstream ss;
     ss << "{";
     for (const Project &project : todoList)
