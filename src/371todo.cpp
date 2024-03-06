@@ -79,8 +79,6 @@ int App::run(int argc, char *argv[])
         TodoList tlObjNew{};
         tlObjNew.addProject(newProject);
 
-        std::cout << tlObjNew.str();
-
         tlObjNew.save(db);
         break;
     }
@@ -93,9 +91,36 @@ int App::run(int argc, char *argv[])
         break;
 
     case Action::DELETE:
-        throw std::runtime_error("delete not implemented");
-        break;
+    {
+        if (!args.count("task"))
+        {
+            tlObj.deleteProject(args["project"].as<std::string>());
+            tlObj.save(db);
+            break;
+        }
+        if (!args.count("tag"))
+        {
+            tlObj.getProject(args["project"].as<std::string>())
+                .deleteTask(args["task"].as<std::string>());
+            tlObj.save(db);
+            break;
+        }
+        tlObj.getProject(args["project"].as<std::string>())
+            .getTask(args["task"].as<std::string>())
+            .deleteTag(args["tag"].as<std::string>());
+        tlObj.save(db);
 
+        // TODO!!!!! remove multiple tags
+        // std::string tagLis = args["tag"].as<std::string>();
+        // std::stringstream test(tagLis);
+        // std::string segment;
+        // std::vector<std::string> seglist;
+        // while (std::getline(test, segment, '_'))
+        // {
+        //     task.addTag(segment);
+        // }
+        break;
+    }
     default:
         throw std::runtime_error("unknown action not implemented");
     }
