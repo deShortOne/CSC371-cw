@@ -78,17 +78,26 @@ Task &Project::newTask(const std::string &tIdent) // throw error?
  */
 bool Project::addTask(Task task)
 {
-    auto position = std::find(this->tasks.begin(), this->tasks.end(), task);
-    if (position != this->tasks.end()) // found
+    TaskContainer::iterator taskWithSameIdentifier;
+    for (taskWithSameIdentifier = tasks.begin(); taskWithSameIdentifier != tasks.end(); taskWithSameIdentifier++)
     {
-        // TODO: merge tags
-        // for (const std::string &i : task.tagContainer)
-        // {
-        // }
-        position->setComplete(task.isComplete());
-        position->setDueDate(task.getDueDate());
+        if (taskWithSameIdentifier->getIdent() == task.getIdent())
+        {
+            break;
+        }
+    }
+
+    if (taskWithSameIdentifier != this->tasks.end()) // found
+    {
+        for (const std::string &i : task.getTags())
+        {
+            task.addTag(i);
+        }
+        taskWithSameIdentifier->setComplete(task.isComplete());
+        taskWithSameIdentifier->setDueDate(task.getDueDate());
         return false;
     }
+
     this->tasks.push_back(task);
     return true;
 }
