@@ -45,6 +45,16 @@ void Project::setIdent(std::string pIdent) noexcept
     this->ident = pIdent;
 }
 
+/**
+ * Returns tasks stored in this project.
+ *
+ * @return const TaskContainer&
+ */
+const TaskContainer &Project::getTasks() const noexcept
+{
+    return this->tasks;
+}
+
 // TODO: Throw a std::runtime_error if the Task object cannot be inserted into the
 // container for whatever reason.
 /**
@@ -68,6 +78,48 @@ Task &Project::newTask(const std::string &tIdent) // throw error?
     this->tasks.push_back(task);
     return this->tasks[this->tasks.size() - 1]; // to not return local variable
 }
+
+/**
+ * Returns the iterator position of the task in the list.
+ * Throws if specified task identifier not found in task list.
+ *
+ * @param tIdent
+ * @return TaskContainer::iterator
+ * @throw NoTaskError if task is not found
+ */
+TaskContainer::iterator Project::findTask(const std::string &tIdent)
+{
+    for (TaskContainer::iterator taskWithSameIdentifier = begin();
+         taskWithSameIdentifier != end();
+         taskWithSameIdentifier++)
+    {
+        if (taskWithSameIdentifier->getIdent() == tIdent)
+        {
+            return taskWithSameIdentifier;
+        }
+    }
+
+    throw NoTaskError(tIdent);
+}
+
+/**
+ * Returns true if sepcified task identifier is found.
+ *
+ * @param tIdent
+ * @return true
+ */
+bool Project::containsTask(const std::string &tIdent) const noexcept
+{
+    for (Task task : tasks)
+    {
+        if (task.getIdent() == tIdent)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * Inserts the specified task into the list.
  * If a task already exist with the specified task's identifier, then the tasks are merged and false is returned.
@@ -175,6 +227,17 @@ bool operator==(const Project &c1, const Project &c2)
 
     // https://stackoverflow.com/a/12648810 vector comparisons
     return !c1.ident.compare(c2.ident) && sameTasks;
+}
+
+/**
+ * Returns JSON representation of this project.
+ *
+ * @return nlohmann::json
+ */
+nlohmann::json Project::json() const
+{
+    using json = nlohmann::json;
+    return json::parse("{" + str() + "}");
 }
 
 // FIXME: include {} at the start and end
