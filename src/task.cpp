@@ -116,6 +116,16 @@ bool Task::containsTag(const std::string tag) const
 }
 
 /**
+ * Returns the tags stored in task.
+ *
+ * @return std::set<std::string>
+ */
+std::vector<std::string> Task::getTags() const
+{
+    return tagContainer;
+}
+
+/**
  * Returns date object stored in task.
  *
  * @return date object

@@ -34,6 +34,7 @@ public:
     bool deleteTag(const std::string tag);
     unsigned int numTags() const;
     bool containsTag(const std::string tag) const;
+    std::vector<std::string> getTags() const;
     Date &getDueDate();
     void setDueDate(const Date &dueDate);
     void setComplete(const bool isComplete);
