@@ -16,14 +16,13 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include <set>
 #include "date.h"
 
 class Task
 {
 private:
     std::string ident;
-    std::set<std::string> tagContainer;
+    std::vector<std::string> tagContainer;
     Date dueDate;
     bool complete;
 

@@ -20,7 +20,7 @@
  * @param ident identifier for this task
  */
 Task::Task(std::string ident) : ident(ident),
-                                tagContainer(std::set<std::string>()),
+                                tagContainer(std::vector<std::string>()),
                                 dueDate(Date()),
                                 complete(false)
 {
@@ -54,9 +54,13 @@ void Task::setIdent(const std::string ident)
  */
 bool Task::addTag(const std::string tag)
 {
-    long unsigned int prevLength = tagContainer.size();
-    tagContainer.insert(tag);
-    return prevLength != tagContainer.size();
+    if (containsTag(tag))
+    {
+        return false;
+    }
+
+    tagContainer.push_back(tag);
+    return true;
 }
 
 /**
@@ -67,13 +71,20 @@ bool Task::addTag(const std::string tag)
  */
 bool Task::deleteTag(const std::string tag)
 {
-    auto search = this->tagContainer.find(tag);
-    if (search == this->tagContainer.end())
+    if (!containsTag(tag))
     {
         throw std::out_of_range("tag not found");
     }
-    this->tagContainer.erase(tag);
-    return true;
+
+    for (unsigned long int i = 0; i < tagContainer.size(); i++)
+    {
+        if (tagContainer[i] == tag)
+        {
+            tagContainer.erase(tagContainer.begin() + i);
+            return true;
+        }
+    }
+    throw std::out_of_range("pulled a houdini");
 }
 
 /**
@@ -94,8 +105,14 @@ unsigned int Task::numTags() const
  */
 bool Task::containsTag(const std::string tag) const
 {
-    auto search = this->tagContainer.find(tag);
-    return search != this->tagContainer.end();
+    for (std::string tagItem : tagContainer)
+    {
+        if (tagItem == tag)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
