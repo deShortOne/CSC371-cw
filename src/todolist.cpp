@@ -199,7 +199,7 @@ bool TodoList::save(std::string filename)
 }
 
 /**
- * Equality operator, compares tasks.
+ * Equality operator, compares tasks ignores order.
  *
  * @param c1
  * @param c2
@@ -207,19 +207,24 @@ bool TodoList::save(std::string filename)
  */
 bool operator==(const TodoList &c1, const TodoList &c2)
 {
+    if (c1.todoList.size() != c2.todoList.size())
+    {
+        return false;
+    }
+
     for (Project project : c1.todoList)
     {
-        bool hasSame = false;
+        bool foundProject = false;
         for (Project project2 : c2.todoList)
         {
             if (project == project2)
             {
-                hasSame = true;
+                foundProject = true;
                 break;
             }
         }
 
-        if (!hasSame)
+        if (!foundProject)
         {
             return false;
         }
