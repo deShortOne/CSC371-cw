@@ -223,6 +223,7 @@ bool operator==(const Project &c1, const Project &c2)
             }
         }
         sameTasks = sameTaskFound;
+        c1Counter++;
     }
 
     // https://stackoverflow.com/a/12648810 vector comparisons
