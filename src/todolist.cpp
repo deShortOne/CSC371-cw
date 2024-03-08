@@ -13,33 +13,30 @@
 #include "lib_json.hpp"
 #include "todolist.h"
 
-using namespace nlohmann; // TODO!!! using namespace for json::parse in save()
-
-// TODO Write a TodoList constructor that takes no parameters and constructs an
-//  empty todolist.
-//
-// Example:
-//  TodoList tObj{};
+/**
+ * Construct a new Todo List
+ *
+ */
 TodoList::TodoList() : todoList(std::vector<Project>()) {}
-// TODO Write a function, size, that takes no parameters and returns an unsigned
-//  int of the number of projects the TodoList contains.
-//
-// Example:
-//  TodoList tObj{};
-//  auto size = tObj.size();
+
+/**
+ * Returns number of projects.
+ *
+ * @return unsigned int number of projects
+ */
 unsigned int TodoList::size() const
 {
     return this->todoList.size();
 }
-// TODO Write a function, newProject, that takes one parameter, a project
-//  identifier, and returns the Project object as a reference. If an object
-//  with the same identifier already exists, then the existing object should be
-//  returned. Throw a std::runtime_error if the Project object cannot be
-//  inserted into the container.
-//
-// Example:
-//  TodoList tObj{};
-//  tObj.newProject("projectIdent");
+
+/**
+ * Returns a project with that identifier. If a project already exists with
+ * that specified identifier, then that project is returned, otherwise new
+ * project is created and inserted.
+ *
+ * @param projectIdent project identifier
+ * @return Project
+ */
 Project TodoList::newProject(std::string projectIdent)
 {
     for (const Project &i : todoList)
@@ -54,23 +51,21 @@ Project TodoList::newProject(std::string projectIdent)
     this->todoList.push_back(newProj);
     return this->todoList[todoList.size() - 1];
 }
-// TODO Write a function, addProject, that takes one parameter, a Project
-//  object, and returns true if the object was successfully inserted. If an
-//  object with the same identifier already exists, then the contents should be
-//  merged (see also Project::addTask) and then return false. Throw a
-//  std::runtime_error if the Project object cannot be inserted into the
-//  container for whatever reason.
-//
-// Example:
-//  TodoList tObj{};
-//  Project cObj{"projectIdent"};
-//  tObj.addProject(cObj);
+
+/**
+ * Inserts the project into the list unless another project with the same
+ * identifier already exists.
+ *
+ * @param project to be inserted
+ * @return true if project is inserted into list, false otherwise
+ */
 bool TodoList::addProject(Project project)
 {
     for (Project &i : this->todoList)
     {
         if (!i.getIdent().compare(project.getIdent()))
         {
+            // TODO merge tasks
             // for (const Task &j : project.getTasks())
             // {
             //     i.addTask(j);
@@ -82,14 +77,15 @@ bool TodoList::addProject(Project project)
     this->todoList.push_back(project);
     return true;
 }
-// TODO Write a function, getProject, that takes one parameter, a Project
-//  identifier and returns the Project. If no Project exists, throw an
-//  appropriate exception.
-//
-// Example:
-//  TodoList tObj{};
-//  tObj.newProject("projectIdent");
-//  auto cObj = tObj.getProject("projectIdent");
+
+/**
+ * Returns project with the specified identifier. If no project with specified
+ * identifier exists, then exception is thrown.
+ *
+ * @param projectIdent
+ * @return Project&
+ * @throw project with specified identifier not found
+ */
 Project &TodoList::getProject(std::string projectIdent)
 {
     for (Project &i : this->todoList)
@@ -101,14 +97,15 @@ Project &TodoList::getProject(std::string projectIdent)
     }
     throw std::out_of_range("That project doesn't exist!");
 }
-// TODO Write a function, deleteProject, that takes one parameter, a Project
-//  identifier, and deletes it from the container, and returns true if the
-//  Project was deleted. If no Project exists, throw an appropriate exception.
-//
-// Example:
-//  TodoList tObj{};
-//  tObj.newProject("projectIdent");
-//  tObj.deleteProject("projectIdent");
+
+/**
+ * Removes the project with the specified identifier from the list.
+ * If no project with the specified identifier is found, then exception is thrown.
+ *
+ * @param projectIdent
+ * @return true
+ * @throw project with specified identifier not found
+ */
 bool TodoList::deleteProject(std::string projectIdent)
 {
     for (unsigned int i = 0; i < this->todoList.size(); i++)
@@ -121,75 +118,20 @@ bool TodoList::deleteProject(std::string projectIdent)
     }
     throw std::out_of_range("That project doesn't exist!");
 }
-// TODO Write a function, load, that takes one parameter, a std::string,
-//  containing the filename for the database. Open the file, read the contents,
-//  and populates the container for this TodoList. If the file does open throw
-//  an appropriate exception (either std::runtime_error or a derived class).
-//
-// A note on clashes:
-//  If you encounter two projects with the same key, the projects should be
-//  merged (not replaced!). If you encounter two tasks with the same identifier
-//  in the same project, only the tags of the tasks should be merged; it is undefined
-//  as to which values are picked for the completed status and due date (pick either).
-//  Two tasks in different projects can have the same key.
-//
-// JSON formatting:
-//  The JSON file has the following format (see the sample database.json file
-//  also provided with the coursework framework):
-// {
-//     "Project 1" : {
-//         "Task 1":  {
-//             "completed": true,
-//             "due": "2024-11-23",
-//             "tags" : ["uni",
-//                       "c++",
-//                       "programming",
-//                       "standard library"
-//                       ...
-//                      ]
-//             ...
-//         },
-//         "Task 2":  {
-//             "completed": false,
-//             "tags" : ["uni",
-//                       "c++",
-//                       "programming",
-//                       "inheritance"
-//                       ...
-//                      ]
-//         },
-//         ...
-//     },
-//     "Project 2": {
-//         "Task 1": {
-//             "completed": true
-//         }
-//         ...
-//     }
-// }
-//
-// More help:
-//  To help you with this function, I've selected the nlohmann::json
-//  library that you must use for your coursework. Read up on how to use it
-//  here: https://github.com/nlohmann/json. You may not use any other external
-//  library other than the one I have provided. You may choose to process the
-//  JSON yourself without the help of the library but I guarantee this will be
-//  more work.
-//
-//  Understanding how to use external libraries is part of this coursework! You
-//  will need to use this file to deserialize the JSON from string
-//  to the JSON object provided by this library. Don't just look at the code
-//  provided below, or in the README on the GitHub and despair. Google search,
-//  look around, try code out in a separate file to all figure out how to use
-//  this library.
-//
-//  Once you have deserialized the JSON string into an object, you will need to
-//  loop through this object, constructing Project and Task objects according
-//  to the JSON data in the file.
-//
-// Example:
-//  TodoList tObj{};
-//  tObj.load("database.json");
+
+/**
+ * Open the specified file and load the data into this todo list. If no file is found, exception
+ * is thrown.
+ * If the data was successfully loaded into the todo list, true is returned.
+ * If the data in the file was not in JSON format, exception is thrown.
+ * If duplicate projects with the same name are found, only one project is created.
+ * TODO: If you attempt to load the same file twice, false is returned.
+ *
+ * @return true if data is loaded into todo list
+ * @throw FileNotFoundError file doesn't exist
+ * @throw JSONFormatError file doesn't contain a valid JSON object
+ */
+
 bool TodoList::load(std::string filename)
 {
     using json = nlohmann::json;
@@ -231,17 +173,16 @@ bool TodoList::load(std::string filename)
         }
         this->todoList.push_back(newProject); // TODO!!!! Don't like how we have to add at the end
     }
-    return false;
+    return true;
 }
-// TODO Write a function, save, that takes one parameter, the path of the file
-//  to write the database to. The function should serialise the TodoList object
-//  as JSON.
-//
-// Example:
-//  TodoList tObj{};
-//  tObj.load("database.json");
-//  ...
-//  tObj.save("database.json");
+
+/**
+ * Saves data to file.
+ *
+ * @param filename
+ * @return true
+ * @throw FileNotFoundError file not found
+ */
 bool TodoList::save(std::string filename)
 {
     auto jsonToSave = json::parse(this->str());
@@ -250,35 +191,47 @@ bool TodoList::save(std::string filename)
     myFile.open(filename, std::ios_base::out | std::ofstream::trunc);
     if (!myFile.is_open())
     {
-        throw std::exception();
+        throw FileNotFoundError(filename);
     }
     myFile << jsonToSave;
     myFile.close();
     return true;
 }
-// TODO Write an == operator overload for the TodoList class, such that two
-//  TodoList objects are equal only if they have the exact same data.
-//
-// Example:
-//  TodoList tObj1{};
-//  TodoList tObj2{};
-//  if(tObj1 == tObj2) {
-//    ...
-//  }
-// NOT IMPLEMENTED!
+
+/**
+ * Equality operator, compares tasks.
+ *
+ * @param c1
+ * @param c2
+ * @return true if both TodoList are the same
+ */
 bool operator==(const TodoList &c1, const TodoList &c2)
 {
-    return false;
+    for (Project project : c1.todoList)
+    {
+        bool hasSame = false;
+        for (Project project2 : c2.todoList)
+        {
+            if (project == project2)
+            {
+                hasSame = true;
+                break;
+            }
+        }
+
+        if (!hasSame)
+        {
+            return false;
+        }
+    }
+    return true;
 }
-// TODO Write a function, str, that takes no parameters and returns a
-//  std::string of the JSON representation of the data in the TodoList.
-//
-// Hint:
-//  See the coursework specification for how this JSON should look.
-//
-// Example:
-//  TodoList tObj{};
-//  std::string s = tObj.str();
+
+/**
+ * Returns JSON representation of the list of projects stored.
+ *
+ * @return std::string
+ */
 std::string TodoList::str() const
 {
     if (todoList.empty())

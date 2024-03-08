@@ -16,6 +16,8 @@
 
 #include "project.h"
 
+using namespace nlohmann;
+
 class TodoList
 {
 private:
@@ -32,6 +34,28 @@ public:
     bool save(std::string filename);
     friend bool operator==(const TodoList &c1, const TodoList &c2);
     std::string str() const;
+};
+
+struct FileNotFoundError : public std::runtime_error
+{
+    explicit FileNotFoundError(const std::string &filename)
+        : std::runtime_error("could not find file '" + filename + "'")
+    {
+        /* do nothing */
+    }
+
+    ~FileNotFoundError() override = default;
+};
+
+struct JSONFormatError : public std::runtime_error
+{
+    explicit JSONFormatError(const std::string &filename)
+        : std::runtime_error("file '" + filename + "' does not have valid JSON data")
+    {
+        /* do nothing */
+    }
+
+    ~JSONFormatError() override = default;
 };
 
 #endif // TODOLIST_H
