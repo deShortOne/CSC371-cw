@@ -65,11 +65,10 @@ bool TodoList::addProject(Project project)
     {
         if (!i.getIdent().compare(project.getIdent()))
         {
-            // TODO merge tasks
-            // for (const Task &j : project.getTasks())
-            // {
-            //     i.addTask(j);
-            // }
+            for (const Task &j : project.getTasks())
+            {
+                i.addTask(j);
+            }
             return false;
         }
     }
@@ -154,6 +153,7 @@ bool TodoList::load(std::string filename)
     using json = nlohmann::json;
     std::ifstream f(filename);
     json data = json::parse(f);
+    f.close();
 
     for (json::iterator project_iter = data.begin(); project_iter != data.end(); ++project_iter)
     {

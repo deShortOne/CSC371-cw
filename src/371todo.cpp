@@ -68,6 +68,16 @@ int App::run(int argc, char *argv[])
     {
     case Action::CREATE:
     {
+        try
+        {
+            validateCreateArguments(args);
+        }
+        catch (const std::runtime_error &error)
+        {
+            std::cerr << error.what();
+            return 1;
+        }
+
         Project newProject{args["project"].as<std::string>()};
         if (args.count("task"))
         {
@@ -78,18 +88,16 @@ int App::run(int argc, char *argv[])
                 std::stringstream test(tagLis);
                 std::string segment;
                 std::vector<std::string> seglist;
-                while (std::getline(test, segment, '_'))
+                while (std::getline(test, segment, ','))
                 {
                     task.addTag(segment);
                 }
             }
             newProject.addTask(task);
         }
+        tlObj.addProject(newProject);
 
-        TodoList tlObjNew{};
-        tlObjNew.addProject(newProject);
-
-        tlObjNew.save(db);
+        tlObj.save(db);
         break;
     }
     case Action::JSON:
@@ -292,6 +300,53 @@ void App::validateArguments(cxxopts::ParseResult &args)
         {
             throw std::runtime_error("Error: missing project argument(s).");
         }
+    }
+}
+
+/**
+ * Validates existance for create action.
+ *
+ * @param args
+ */
+void App::validateCreateArguments(cxxopts::ParseResult &args)
+{
+    bool isGood = true;
+    std::string errorMessage = "Error: missing ";
+    if (!args.count("project"))
+    {
+        isGood = false;
+        errorMessage += "project";
+    }
+    if (!args.count("task"))
+    {
+        if (!isGood)
+        {
+            errorMessage += ", ";
+        }
+        isGood = false;
+        errorMessage += "task";
+    }
+    if (!args.count("tag"))
+    {
+        if (!isGood)
+        {
+            errorMessage += ", ";
+        }
+        isGood = false;
+        errorMessage += "tag";
+    }
+    if (!isGood)
+    {
+        if (!args.count("due"))
+        {
+            errorMessage += ", due";
+        }
+        if (!args.count("completed") || !args.count("incomplete"))
+        {
+            errorMessage += ", completed/incomplete";
+        }
+        errorMessage += " argument(s).";
+        throw std::runtime_error(errorMessage);
     }
 }
 

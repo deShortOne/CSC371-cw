@@ -59,7 +59,7 @@ public:
     ~CerrRedirect() { std::cerr.rdbuf(old); }
 };
 
-const std::string filePath = "./tests/testdatabasealt.json";
+const std::string filePath = "./database.json";
 
 auto fileExists = [](const std::string &path)
 {
@@ -235,34 +235,46 @@ SCENARIO("7) ./371todo-output --action json --task \"Lab Assignment 2\"")
     REQUIRE(outputError == "Error: missing project argument(s).");
 }
 
-// SCENARIO("8) ./371todo-output --action create")
-// {
-//     Argv argvObj({"test", "--action", "create"});
-//     auto **argv = argvObj.argv();
-//     auto argc = argvObj.argc();
+SCENARIO("8) ./371todo-output --action create")
+{
+    Argv argvObj({"test", "--action", "create"});
+    auto **argv = argvObj.argv();
+    auto argc = argvObj.argc();
 
-//     std::stringstream buffer;
-//     CoutRedirect originalBuffer{buffer.rdbuf()};
+    std::stringstream buffer;
+    CoutRedirect originalBuffer{buffer.rdbuf()};
+    std::stringstream bufferError;
+    CerrRedirect originalBufferError{bufferError.rdbuf()};
 
-//     REQUIRE_NOTHROW(App::run(argc, argv));
+    REQUIRE_NOTHROW(App::run(argc, argv));
 
-//     std::string output = buffer.str();
-//     REQUIRE(output == "");
-//     // TODO: get std::cerr Error: missing project, task, tag, due, completed/incomplete argument(s).
-// }
+    std::string output = buffer.str();
+    REQUIRE(output == "");
+    std::string outputError = bufferError.str();
+    REQUIRE(outputError == "Error: missing project, task, tag, due, completed/incomplete argument(s).");
+}
 
-// SCENARIO("9) ./371todo-output --action create --project \"CSC371\" --task \"Lab Assignment 2\" --tag \"programming,c,uni\"")
-// {
-//     Argv argvObj({"test", "--action", "create", "--project", "CSC371", "--task", "Lab Assignment 2", "--tag", "programming,c,uni"});
-//     auto **argv = argvObj.argv();
-//     auto argc = argvObj.argc();
+SCENARIO("9) ./371todo-output --action create --project \"CSC371\" --task \"Lab Assignment 2\" --tag \"programming,c,uni\"")
+{
+    Argv argvObj({"test", "--action", "create", "--project", "CSC371", "--task", "Lab Assignment 2", "--tag", "programming,c,uni"});
+    auto **argv = argvObj.argv();
+    auto argc = argvObj.argc();
 
-//     std::stringstream buffer;
-//     CoutRedirect originalBuffer{buffer.rdbuf()};
+    std::stringstream buffer;
+    CoutRedirect originalBuffer{buffer.rdbuf()};
+    std::stringstream bufferError;
+    CerrRedirect originalBufferError{bufferError.rdbuf()};
 
-//     REQUIRE_NOTHROW(App::run(argc, argv));
+    REQUIRE_NOTHROW(App::run(argc, argv));
 
-//     std::string output = buffer.str();
-//     REQUIRE(output == "");
-//     // TODO: get std::cerr Error: missing project, task, tag, due, completed/incomplete argument(s).
-// }
+    std::string output = buffer.str();
+    REQUIRE(output == "");
+    std::string outputError = bufferError.str();
+    REQUIRE(outputError == "");
+
+    std::ifstream f(filePath);
+    std::stringstream bufferFile;
+    bufferFile << f.rdbuf();
+    REQUIRE(bufferFile.str() == "{\"CSC307\":{\"Write Mobile App\":{\"completed\":true,\"dueDate\":\"2023-11-30\",\"tags\":[\"uni\",\"programming\",\"android\"]}},\"CSC371\":{\"Lab Assignment 1\":{\"completed\":true,\"dueDate\":\"2024-2-13\",\"tags\":[\"uni\",\"c\",\"programming\"]},\"Lab Assignment 2\":{\"completed\":false,\"dueDate\":\"\",\"tags\":[\"programming\",\"c\",\"uni\"]},\"Lab Assignment 6\":{\"completed\":false,\"dueDate\":\"2024-4-23\",\"tags\":[\"uni\",\"c++\",\"programming\",\"standard library\"]}}}");
+    f.close();
+}
