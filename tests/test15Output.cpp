@@ -75,10 +75,9 @@ auto writeFileContents = [](const std::string &path,
     f << contents;
 };
 
-SCENARIO("SET UP")
+void resetDbFile()
 {
-    REQUIRE(fileExists(filePath));
-    REQUIRE_NOTHROW(writeFileContents(
+    writeFileContents(
         filePath,
         "{ \"CSC371\": { \"Lab Assignment 1\": { \"completed\": true, "
         "\"dueDate\": \"2024-02-13\", \"tags\": [ \"uni\", \"c\", "
@@ -86,7 +85,13 @@ SCENARIO("SET UP")
         "\"dueDate\": \"2024-04-23\", \"tags\": [ \"uni\", \"c++\", "
         "\"programming\", \"standard library\" ] } }, \"CSC307\": { \"Write "
         "Mobile App\": { \"completed\": true, \"dueDate\": \"2023-11-30\", "
-        "\"tags\": [ \"uni\", \"programming\", \"android\" ] } } }"));
+        "\"tags\": [ \"uni\", \"programming\", \"android\" ] } } }");
+}
+
+SCENARIO("SET UP")
+{
+    REQUIRE(fileExists(filePath));
+    REQUIRE_NOTHROW(resetDbFile());
 }
 
 SCENARIO("./371todo ‑‑action 123")
@@ -276,5 +281,55 @@ SCENARIO("9) ./371todo-output --action create --project \"CSC371\" --task \"Lab 
     std::stringstream bufferFile;
     bufferFile << f.rdbuf();
     REQUIRE(bufferFile.str() == "{\"CSC307\":{\"Write Mobile App\":{\"completed\":true,\"dueDate\":\"2023-11-30\",\"tags\":[\"uni\",\"programming\",\"android\"]}},\"CSC371\":{\"Lab Assignment 1\":{\"completed\":true,\"dueDate\":\"2024-2-13\",\"tags\":[\"uni\",\"c\",\"programming\"]},\"Lab Assignment 2\":{\"completed\":false,\"dueDate\":\"\",\"tags\":[\"programming\",\"c\",\"uni\"]},\"Lab Assignment 6\":{\"completed\":false,\"dueDate\":\"2024-4-23\",\"tags\":[\"uni\",\"c++\",\"programming\",\"standard library\"]}}}");
+    f.close();
+}
+
+SCENARIO("10: ./371todo-output --action update --project \"CSC371\" --task \"Lab Assignment 2\" --due \"2024-02-20\" --incomplete")
+{
+    Argv argvObj({"test", "--action", "update", "--project", "CSC371", "--task", "Lab Assignment 2", "--due", "2024-02-20", "--incomplete"});
+    auto **argv = argvObj.argv();
+    auto argc = argvObj.argc();
+
+    std::stringstream buffer;
+    CoutRedirect originalBuffer{buffer.rdbuf()};
+    std::stringstream bufferError;
+    CerrRedirect originalBufferError{bufferError.rdbuf()};
+
+    REQUIRE_NOTHROW(App::run(argc, argv));
+
+    std::string output = buffer.str();
+    REQUIRE(output == "");
+    std::string outputError = bufferError.str();
+    REQUIRE(outputError == "");
+
+    std::ifstream f(filePath);
+    std::stringstream bufferFile;
+    bufferFile << f.rdbuf();
+    REQUIRE(bufferFile.str() == "{\"CSC307\":{\"Write Mobile App\":{\"completed\":true,\"dueDate\":\"2023-11-30\",\"tags\":[\"uni\",\"programming\",\"android\"]}},\"CSC371\":{\"Lab Assignment 1\":{\"completed\":true,\"dueDate\":\"2024-2-13\",\"tags\":[\"uni\",\"c\",\"programming\"]},\"Lab Assignment 2\":{\"completed\":false,\"dueDate\":\"2024-2-20\",\"tags\":[\"programming\",\"c\",\"uni\"]},\"Lab Assignment 6\":{\"completed\":false,\"dueDate\":\"2024-4-23\",\"tags\":[\"uni\",\"c++\",\"programming\",\"standard library\"]}}}");
+    f.close();
+}
+
+SCENARIO("11) ./371todo-output --action update --project \"CSC371\" --task \"Lab Assignment 2\" --completed")
+{
+    Argv argvObj({"test", "--action", "update", "--project", "CSC371", "--task", "Lab Assignment 2", "--completed"});
+    auto **argv = argvObj.argv();
+    auto argc = argvObj.argc();
+
+    std::stringstream buffer;
+    CoutRedirect originalBuffer{buffer.rdbuf()};
+    std::stringstream bufferError;
+    CerrRedirect originalBufferError{bufferError.rdbuf()};
+
+    REQUIRE_NOTHROW(App::run(argc, argv));
+
+    std::string output = buffer.str();
+    REQUIRE(output == "");
+    std::string outputError = bufferError.str();
+    REQUIRE(outputError == "");
+
+    std::ifstream f(filePath);
+    std::stringstream bufferFile;
+    bufferFile << f.rdbuf();
+    REQUIRE(bufferFile.str() == "{\"CSC307\":{\"Write Mobile App\":{\"completed\":true,\"dueDate\":\"2023-11-30\",\"tags\":[\"uni\",\"programming\",\"android\"]}},\"CSC371\":{\"Lab Assignment 1\":{\"completed\":true,\"dueDate\":\"2024-2-13\",\"tags\":[\"uni\",\"c\",\"programming\"]},\"Lab Assignment 2\":{\"completed\":true,\"dueDate\":\"2024-2-20\",\"tags\":[\"programming\",\"c\",\"uni\"]},\"Lab Assignment 6\":{\"completed\":false,\"dueDate\":\"2024-4-23\",\"tags\":[\"uni\",\"c++\",\"programming\",\"standard library\"]}}}");
     f.close();
 }

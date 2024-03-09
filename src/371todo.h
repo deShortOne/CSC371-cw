@@ -56,6 +56,8 @@ namespace App
     void validateArguments(cxxopts::ParseResult &args);
     void validateCreateArguments(cxxopts::ParseResult &args);
 
+    std::vector<std::string> splitString(const std::string &string, const char delimiter);
+
     std::string getJSON(TodoList &tl);
     std::string getJSON(TodoList &tl, const std::string &p);
     std::string getJSON(TodoList &tl, const std::string &p, const std::string &t);

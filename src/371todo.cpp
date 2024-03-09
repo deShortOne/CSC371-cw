@@ -87,7 +87,6 @@ int App::run(int argc, char *argv[])
                 std::string tagLis = args["tag"].as<std::string>();
                 std::stringstream test(tagLis);
                 std::string segment;
-                std::vector<std::string> seglist;
                 while (std::getline(test, segment, ','))
                 {
                     task.addTag(segment);
@@ -142,9 +141,78 @@ int App::run(int argc, char *argv[])
         break;
     }
     case Action::UPDATE:
-        throw std::runtime_error("update not implemented");
-        break;
+    {
+        // Project
+        if (!args.count("project"))
+        {
+            std::cerr << "Error: missing project argument(s).";
+            break;
+        }
 
+        std::vector<std::string> projectSplit = splitString(args["project"].as<std::string>(), ':');
+        if (projectSplit.size() > 2)
+        {
+            std::cerr << "Error: invalid project argument(s) - format to update project identifier is oldidentifier:newidentifier.";
+            return 1;
+        }
+
+        if (!tlObj.containsProject(projectSplit[0]))
+        {
+            std::cerr << "Error: invalid project argument(s) - project not found.";
+            return 1;
+        }
+        Project &project = tlObj.getProject(projectSplit[0]);
+        if (projectSplit.size() == 2)
+        {
+            project.setIdent(projectSplit[1]);
+        }
+
+        // Task
+        if (!args.count("task"))
+        {
+            if (args.count("due") || args.count("completed") || args.count("incomplete"))
+            {
+                std::cerr << "Error: missing task argument(s).";
+                return 1;
+            }
+            break;
+        }
+
+        std::vector<std::string> taskSplit = splitString(args["task"].as<std::string>(), ':');
+        if (taskSplit.size() > 2)
+        {
+            std::cerr << "Error: invalid task argument(s) - format to update task identifier is oldidentifier:newidentifier.";
+            return 1;
+        }
+
+        if (!project.containsTask(taskSplit[0]))
+        {
+            std::cerr << "Error: invalid project argument(s) - project not found.";
+            return 1;
+        }
+        Task &task = project.getTask(taskSplit[0]);
+        if (taskSplit.size() == 2)
+        {
+            task.setIdent(taskSplit[1]);
+        }
+
+        if (args.count("due"))
+        {
+            Date date{args["due"].as<std::string>()};
+            task.setDueDate(date);
+        }
+        if (args.count("completed"))
+        {
+            task.setComplete(true);
+        }
+        if (args.count("incomplete"))
+        {
+            task.setComplete(false);
+        }
+
+        tlObj.save(db);
+        break;
+    }
     case Action::DELETE:
     {
         if (!args.count("task"))
@@ -348,6 +416,25 @@ void App::validateCreateArguments(cxxopts::ParseResult &args)
         errorMessage += " argument(s).";
         throw std::runtime_error(errorMessage);
     }
+}
+
+/**
+ * Returns vector of strings split by delimiter.
+ *
+ * @param string
+ * @param delimiter
+ * @return std::vector<std::string>&
+ */
+std::vector<std::string> App::splitString(const std::string &string, const char delimiter)
+{
+    std::stringstream test(string);
+    std::string segment;
+    std::vector<std::string> seglist;
+    while (std::getline(test, segment, delimiter))
+    {
+        seglist.push_back(segment);
+    }
+    return seglist;
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
