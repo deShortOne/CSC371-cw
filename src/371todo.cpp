@@ -400,6 +400,9 @@ void App::validateArguments(cxxopts::ParseResult &args)
  */
 void App::validateCreateArguments(cxxopts::ParseResult &args)
 {
+    // indicates what has been put into the error message and what needs to be put in
+    int errorMsgPosition = 0;
+
     bool isGood = true;
     std::string errorMessage = "Error: missing ";
     if (!args.count("project"))
@@ -407,24 +410,40 @@ void App::validateCreateArguments(cxxopts::ParseResult &args)
         isGood = false;
         errorMessage += "project";
     }
-    if (!args.count("task"))
+
+    if (args.count("task"))
+    {
+        errorMsgPosition = 1;
+    }
+    else
     {
         if (!isGood)
         {
-            errorMessage += ", ";
+            errorMessage += ", task";
+            errorMsgPosition = 1;
         }
-        isGood = false;
-        errorMessage += "task";
     }
-    if (!args.count("tag"))
+
+    if (args.count("tag"))
+    {
+        if (errorMsgPosition == 0)
+        {
+            if (!isGood)
+            {
+                errorMessage += ", ";
+            }
+            isGood = false;
+            errorMessage += "task";
+        }
+    }
+    else
     {
         if (!isGood)
         {
-            errorMessage += ", ";
+            errorMessage += ", tag";
         }
-        isGood = false;
-        errorMessage += "tag";
     }
+
     if (!isGood)
     {
         if (!args.count("due"))
