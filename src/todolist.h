@@ -30,6 +30,7 @@ public:
     bool addProject(Project project);
     Project &getProject(std::string projectIdent);
     bool deleteProject(std::string projectIdent);
+    bool containsProject(const std::string &projectIdent) const noexcept;
     bool load(std::string filename);
     bool save(std::string filename);
     friend bool operator==(const TodoList &c1, const TodoList &c2);

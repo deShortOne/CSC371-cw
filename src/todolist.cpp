@@ -120,6 +120,23 @@ bool TodoList::deleteProject(std::string projectIdent)
 }
 
 /**
+ * Find project.
+ *
+ * @param projectIdent
+ * @return true if project with specified identifier is found
+ */
+bool TodoList::containsProject(const std::string &projectIdent) const noexcept
+{
+    for (const Project &i : this->todoList)
+    {
+        if (!i.getIdent().compare(projectIdent))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+/**
  * Open the specified file and load the data into this todo list. If no file is found, exception
  * is thrown.
  * If the data was successfully loaded into the todo list, true is returned.
