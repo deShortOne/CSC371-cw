@@ -53,6 +53,7 @@ namespace App
     cxxopts::Options cxxoptsSetup();
 
     App::Action parseActionArgument(cxxopts::ParseResult &args);
+    void validateArguments(cxxopts::ParseResult &args);
 
     std::string getJSON(TodoList &tl);
     std::string getJSON(TodoList &tl, const std::string &p);

@@ -53,6 +53,16 @@ int App::run(int argc, char *argv[])
     // Only uncomment this once you have implemented the load function!
     tlObj.load(db);
 
+    try
+    {
+        validateArguments(args);
+    }
+    catch (const std::runtime_error &error)
+    {
+        std::cerr << error.what();
+        return 1;
+    }
+
     const Action a = parseActionArgument(args);
     switch (a)
     {
@@ -83,9 +93,46 @@ int App::run(int argc, char *argv[])
         break;
     }
     case Action::JSON:
-        std::cout << tlObj.str();
-        break;
+    {
+        if (!args.count("project"))
+        {
+            std::cout << tlObj.str();
+            break;
+        }
 
+        if (!tlObj.containsProject(args["project"].as<std::string>()))
+        {
+            std::cerr << "Error: invalid project argument(s).";
+            return 1;
+        }
+
+        Project project = tlObj.getProject(args["project"].as<std::string>());
+        if (!args.count("task"))
+        {
+            std::cout << project.str();
+            break;
+        }
+        if (!project.containsTask(args["task"].as<std::string>()))
+        {
+            std::cerr << "Error: invalid task argument(s).";
+            return 1;
+        }
+
+        Task task = project.getTask(args["task"].as<std::string>());
+        if (!args.count("tag"))
+        {
+            std::cout << task.str();
+            break;
+        }
+        if (!task.containsTag(args["tag"].as<std::string>()))
+        {
+            std::cerr << "Error: invalid tag argument(s).";
+            return 1;
+        }
+
+        std::cout << args["tag"].as<std::string>();
+        break;
+    }
     case Action::UPDATE:
         throw std::runtime_error("update not implemented");
         break;
@@ -217,6 +264,37 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args)
     throw std::invalid_argument("action");
 }
 
+/**
+ * Validates the existance for project, task and tag.
+ *
+ * @param args
+ */
+void App::validateArguments(cxxopts::ParseResult &args)
+{
+    if (args.count("tag"))
+    {
+        if (!args.count("task") && !args.count("project"))
+        {
+            throw std::runtime_error("Error: missing project and task argument(s).");
+        }
+        if (!args.count("task"))
+        {
+            throw std::runtime_error("Error: missing task argument(s).");
+        }
+        if (!args.count("project"))
+        {
+            throw std::runtime_error("Error: missing project argument(s).");
+        }
+    }
+    else if (args.count("task"))
+    {
+        if (!args.count("project"))
+        {
+            throw std::runtime_error("Error: missing project argument(s).");
+        }
+    }
+}
+
 // TODO Write a function, getJSON, that returns a std::string containing the
 // JSON representation of a TodoList object.
 //
@@ -230,9 +308,7 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args)
 //  std::cout << getJSON(tlObj);
 std::string App::getJSON(TodoList &tlObj)
 {
-    return "{}";
-    // Only uncomment this once you have implemented the functions used!
-    // return tlObj.str();
+    return tlObj.str();
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
@@ -249,10 +325,8 @@ std::string App::getJSON(TodoList &tlObj)
 //  std::cout << getJSON(tlObj, p);
 std::string App::getJSON(TodoList &tlObj, const std::string &p)
 {
-    return "{}";
-    // Only uncomment this once you have implemented the functions used!
-    // auto pObj = tlObj.getProject(p);
-    // return pObj.str();
+    auto pObj = tlObj.getProject(p);
+    return pObj.str();
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
@@ -271,11 +345,9 @@ std::string App::getJSON(TodoList &tlObj, const std::string &p)
 std::string App::getJSON(TodoList &tlObj, const std::string &p,
                          const std::string &t)
 {
-    return "{}";
-    // Only uncomment this once you have implemented the functions used!
-    // auto pObj = tlObj.getProject(p);
-    // const auto tObj = pObj.getTask(t);
-    // return tObj.str();
+    auto pObj = tlObj.getProject(p);
+    const auto tObj = pObj.getTask(t);
+    return tObj.str();
 }
 
 // DONE Write a function, getJSON, that returns a std::string containing the
@@ -296,13 +368,7 @@ std::string App::getJSON(TodoList &tlObj, const std::string &p,
 std::string App::getJSON(TodoList &tlObj, const std::string &p,
                          const std::string &task, const std::string &tag)
 {
-    return "{}";
-    // Only uncomment this once you have implemented the functions used!
-    // auto pObj = tlObj.getProject(p);
-    // const auto tObj = pObj.getTask(task);
-    // if (tObj.containsTag(tag)) {
-    //   return tag;
-    // } else {
-    //   return "";
-    // }
+    auto pObj = tlObj.getProject(p);
+    const auto tObj = pObj.getTask(task);
+    return tObj.containsTag(tag) ? tag : "";
 }
