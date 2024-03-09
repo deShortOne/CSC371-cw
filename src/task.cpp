@@ -180,7 +180,6 @@ bool Task::operator==(const Task &rhs) const
 }
 
 /**
- * FIXME: include {} at the start and end
  * Create JSON representation of the data in the task.
  *
  * @return JSON represention of task
@@ -188,7 +187,7 @@ bool Task::operator==(const Task &rhs) const
 std::string Task::str() const
 {
     std::stringstream ss;
-    ss << "\"" << this->ident << "\":{"
+    ss << "{"
        << "\"completed\":" << (this->complete ? "true" : "false")
        << ",\"dueDate\":\"" << this->dueDate.str() << "\""
        << ",\"tags\":[";

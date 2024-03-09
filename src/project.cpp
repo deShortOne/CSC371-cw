@@ -241,7 +241,6 @@ nlohmann::json Project::json() const
     return json::parse("{" + str() + "}");
 }
 
-// FIXME: include {} at the start and end
 /**
  * Returns JSON representation of this project.
  *
@@ -251,14 +250,14 @@ std::string Project::str() const
 {
     if (tasks.empty())
     {
-        return "\"" + this->ident + "\":{}";
+        return "{}";
     }
     std::stringstream ss;
-    ss << "\"" << this->ident << "\":{";
+    ss << "{";
 
     for (const Task &i : this->tasks)
     {
-        ss << i.str() << ",";
+        ss << "\"" << i.getIdent() << "\":" << i.str() << ",";
     }
     ss.seekp(-1, ss.cur); // remove last ,
     ss << "}";

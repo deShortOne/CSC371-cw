@@ -247,7 +247,8 @@ std::string TodoList::str() const
     ss << "{";
     for (const Project &project : todoList)
     {
-        ss << project.str()
+        ss << "\"" << project.getIdent() << "\":"
+           << project.str()
            << ",";
     }
     ss.seekp(-1, ss.cur); // remove last ,
