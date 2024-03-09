@@ -23,3 +23,8 @@
 #include "test8.cpp"
 #include "test9.cpp"
 #include "test10.cpp"
+#include "test11Date.cpp"
+#include "test12Task.cpp"
+#include "test13Project.cpp"
+#include "test14TodoList.cpp"
+#include "test15Output.cpp"

@@ -31,18 +31,18 @@
 // by Björn Pollex
 // via https://stackoverflow.com/a/5419388
 // licensed under CC BY-SA 3.0.
-class CoutRedirect
+class CoutRedirectv2 // v2 because it's also used in test 8
 {
 private:
     std::streambuf *old;
 
 public:
-    CoutRedirect(std::streambuf *new_buffer)
+    CoutRedirectv2(std::streambuf *new_buffer)
         : old(std::cout.rdbuf(new_buffer))
     { /* do nothing */
     }
 
-    ~CoutRedirect() { std::cout.rdbuf(old); }
+    ~CoutRedirectv2() { std::cout.rdbuf(old); }
 };
 
 class CerrRedirect
@@ -111,7 +111,7 @@ SCENARIO("1) ./371todo ‑‑action json")
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -131,7 +131,7 @@ SCENARIO("2) ./371todo-output --action json --project \"CSC371\"")
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -151,7 +151,7 @@ SCENARIO("3) ./371todo-output --action json --project \"CSC371\" --task \"Lab As
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -171,7 +171,7 @@ SCENARIO("4) ./371todo-output --action json --project \"CSC371\" --task \"Lab As
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -190,7 +190,7 @@ SCENARIO("5) ./371todo-output --action json --project \"CSC371\" --task \"Lab As
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -209,7 +209,7 @@ SCENARIO("6) ./371todo-output --action json --project \"CSC173\" --task \"Lab As
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -228,7 +228,7 @@ SCENARIO("7) ./371todo-output --action json --task \"Lab Assignment 2\"")
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -247,7 +247,7 @@ SCENARIO("8) ./371todo-output --action create")
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -266,7 +266,7 @@ SCENARIO("9) ./371todo-output --action create --project \"CSC371\" --task \"Lab 
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -291,7 +291,7 @@ SCENARIO("10: ./371todo-output --action update --project \"CSC371\" --task \"Lab
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -316,7 +316,7 @@ SCENARIO("11) ./371todo-output --action update --project \"CSC371\" --task \"Lab
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -341,7 +341,7 @@ SCENARIO("12: ./371todo-output --action delete --project \"CSC371\" --task \"Lab
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
@@ -366,7 +366,7 @@ SCENARIO("13: ./371todo-output --action delete --project \"CSC371\"")
     auto argc = argvObj.argc();
 
     std::stringstream buffer;
-    CoutRedirect originalBuffer{buffer.rdbuf()};
+    CoutRedirectv2 originalBuffer{buffer.rdbuf()};
     std::stringstream bufferError;
     CerrRedirect originalBufferError{bufferError.rdbuf()};
 
