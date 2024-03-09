@@ -333,3 +333,53 @@ SCENARIO("11) ./371todo-output --action update --project \"CSC371\" --task \"Lab
     REQUIRE(bufferFile.str() == "{\"CSC307\":{\"Write Mobile App\":{\"completed\":true,\"dueDate\":\"2023-11-30\",\"tags\":[\"uni\",\"programming\",\"android\"]}},\"CSC371\":{\"Lab Assignment 1\":{\"completed\":true,\"dueDate\":\"2024-2-13\",\"tags\":[\"uni\",\"c\",\"programming\"]},\"Lab Assignment 2\":{\"completed\":true,\"dueDate\":\"2024-2-20\",\"tags\":[\"programming\",\"c\",\"uni\"]},\"Lab Assignment 6\":{\"completed\":false,\"dueDate\":\"2024-4-23\",\"tags\":[\"uni\",\"c++\",\"programming\",\"standard library\"]}}}");
     f.close();
 }
+
+SCENARIO("12: ./371todo-output --action delete --project \"CSC371\" --task \"Lab Assignment 2\" --tag \"uni\"")
+{
+    Argv argvObj({"test", "--action", "delete", "--project", "CSC371", "--task", "Lab Assignment 2", "--tag", "uni"});
+    auto **argv = argvObj.argv();
+    auto argc = argvObj.argc();
+
+    std::stringstream buffer;
+    CoutRedirect originalBuffer{buffer.rdbuf()};
+    std::stringstream bufferError;
+    CerrRedirect originalBufferError{bufferError.rdbuf()};
+
+    REQUIRE_NOTHROW(App::run(argc, argv));
+
+    std::string output = buffer.str();
+    REQUIRE(output == "");
+    std::string outputError = bufferError.str();
+    REQUIRE(outputError == "");
+
+    std::ifstream f(filePath);
+    std::stringstream bufferFile;
+    bufferFile << f.rdbuf();
+    REQUIRE(bufferFile.str() == "{\"CSC307\":{\"Write Mobile App\":{\"completed\":true,\"dueDate\":\"2023-11-30\",\"tags\":[\"uni\",\"programming\",\"android\"]}},\"CSC371\":{\"Lab Assignment 1\":{\"completed\":true,\"dueDate\":\"2024-2-13\",\"tags\":[\"uni\",\"c\",\"programming\"]},\"Lab Assignment 2\":{\"completed\":true,\"dueDate\":\"2024-2-20\",\"tags\":[\"programming\",\"c\"]},\"Lab Assignment 6\":{\"completed\":false,\"dueDate\":\"2024-4-23\",\"tags\":[\"uni\",\"c++\",\"programming\",\"standard library\"]}}}");
+    f.close();
+}
+
+SCENARIO("13: ./371todo-output --action delete --project \"CSC371\"")
+{
+    Argv argvObj({"test", "--action", "delete", "--project", "CSC371"});
+    auto **argv = argvObj.argv();
+    auto argc = argvObj.argc();
+
+    std::stringstream buffer;
+    CoutRedirect originalBuffer{buffer.rdbuf()};
+    std::stringstream bufferError;
+    CerrRedirect originalBufferError{bufferError.rdbuf()};
+
+    REQUIRE_NOTHROW(App::run(argc, argv));
+
+    std::string output = buffer.str();
+    REQUIRE(output == "");
+    std::string outputError = bufferError.str();
+    REQUIRE(outputError == "");
+
+    std::ifstream f(filePath);
+    std::stringstream bufferFile;
+    bufferFile << f.rdbuf();
+    REQUIRE(bufferFile.str() == "{\"CSC307\":{\"Write Mobile App\":{\"completed\":true,\"dueDate\":\"2023-11-30\",\"tags\":[\"uni\",\"programming\",\"android\"]}}}");
+    f.close();
+}

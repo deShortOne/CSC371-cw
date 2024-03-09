@@ -215,22 +215,44 @@ int App::run(int argc, char *argv[])
     }
     case Action::DELETE:
     {
+        if (!args.count("project"))
+        {
+            std::cerr << "Error: missing project argument(s).";
+            return 1;
+        }
+
+        if (!tlObj.containsProject(args["project"].as<std::string>()))
+        {
+            std::cerr << "Error: invalid project argument(s) - project not found.";
+            return 1;
+        }
         if (!args.count("task"))
         {
             tlObj.deleteProject(args["project"].as<std::string>());
             tlObj.save(db);
             break;
         }
+
+        Project &project = tlObj.getProject(args["project"].as<std::string>());
+        if (!project.containsTask(args["task"].as<std::string>()))
+        {
+            std::cerr << "Error: invalid task argument(s) - task not found.";
+            return 1;
+        }
         if (!args.count("tag"))
         {
-            tlObj.getProject(args["project"].as<std::string>())
-                .deleteTask(args["task"].as<std::string>());
+            project.deleteTask(args["task"].as<std::string>());
             tlObj.save(db);
             break;
         }
-        tlObj.getProject(args["project"].as<std::string>())
-            .getTask(args["task"].as<std::string>())
-            .deleteTag(args["tag"].as<std::string>());
+
+        Task &task = project.getTask(args["task"].as<std::string>());
+        std::vector<std::string> tagLis = splitString(args["tag"].as<std::string>(), ',');
+
+        for (const std::string &tag : tagLis)
+        {
+            task.deleteTag(tag);
+        }
         tlObj.save(db);
 
         // TODO!!!!! remove multiple tags
