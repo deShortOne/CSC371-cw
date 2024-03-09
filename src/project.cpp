@@ -143,7 +143,7 @@ bool Project::addTask(Task task)
     {
         for (const std::string &i : task.getTags())
         {
-            task.addTag(i);
+            taskWithSameIdentifier->addTag(i);
         }
         taskWithSameIdentifier->setComplete(task.isComplete());
         taskWithSameIdentifier->setDueDate(task.getDueDate());
