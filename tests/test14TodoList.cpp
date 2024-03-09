@@ -62,3 +62,28 @@ SCENARIO("Compare todo lists")
     REQUIRE(tl1 == tl2);
     REQUIRE_FALSE(tl1 == tl3);
 }
+
+SCENARIO("Add project")
+{
+    Task task1{"task1"};
+    task1.addTag("a");
+    task1.addTag("b");
+
+    Task task2{"task2"};
+    task1.addTag("c");
+    task1.addTag("d");
+
+    Project project{"new Project"};
+    project.addTask(task1);
+    project.addTask(task2);
+
+    Project project2{"new Project 2"};
+    project2.addTask(task1);
+    project2.addTask(task2);
+
+    TodoList tl{};
+    tl.addProject(project);
+    tl.addProject(project2);
+
+    REQUIRE(tl.size() == 2);
+}
