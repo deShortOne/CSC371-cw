@@ -25,6 +25,8 @@
 
 #include "../src/371todo.h"
 
+std::string filename = "./tests/myowntest.json";
+
 SCENARIO("Compare todo lists")
 {
     Task task1{"task1"};
@@ -63,7 +65,7 @@ SCENARIO("Compare todo lists")
     REQUIRE_FALSE(tl1 == tl3);
 }
 
-SCENARIO("Add project")
+SCENARIO("Edit projects")
 {
     Task task1{"task1"};
     task1.addTag("a");
@@ -73,17 +75,61 @@ SCENARIO("Add project")
     task1.addTag("c");
     task1.addTag("d");
 
-    Project project{"new Project"};
+    Project project{"project1"};
     project.addTask(task1);
     project.addTask(task2);
 
-    Project project2{"new Project 2"};
+    Project project2{"project2"};
     project2.addTask(task1);
     project2.addTask(task2);
 
     TodoList tl{};
-    tl.addProject(project);
-    tl.addProject(project2);
+    REQUIRE(tl.addProject(project));
+    REQUIRE(tl.addProject(project2));
 
+    REQUIRE_FALSE(tl.addProject(project2));
+    REQUIRE(tl.containsProject("project1"));
+    REQUIRE(tl.containsProject("project2"));
+    REQUIRE_FALSE(tl.containsProject("project3"));
     REQUIRE(tl.size() == 2);
+
+    REQUIRE(tl.getProject("project1") == project);
+    REQUIRE(tl.getProject("project2") == project2);
+    REQUIRE_THROWS_AS(tl.getProject("project3"), std::out_of_range);
+    REQUIRE_THROWS_WITH(tl.getProject("project3"), "That project doesn't exist!");
+
+    REQUIRE(tl.deleteProject("project1"));
+    REQUIRE_THROWS_AS(tl.deleteProject("project1"), std::out_of_range);
+    REQUIRE_THROWS_WITH(tl.deleteProject("project1"), "That project doesn't exist!");
+    REQUIRE(tl.size() == 1);
+}
+
+SCENARIO("save and load")
+{
+    Task task1{"task1"};
+    task1.addTag("a");
+    task1.addTag("b");
+
+    Task task2{"task2"};
+    task1.addTag("c");
+    task1.addTag("d");
+
+    Project project{"project1"};
+    project.addTask(task1);
+    project.addTask(task2);
+
+    Project project2{"project2"};
+    project2.addTask(task1);
+    project2.addTask(task2);
+
+    TodoList tl{};
+    REQUIRE(tl.addProject(project));
+    REQUIRE(tl.addProject(project2));
+
+    tl.save(filename);
+
+    TodoList tl2{};
+    tl2.load(filename);
+
+    REQUIRE(tl == tl2);
 }
