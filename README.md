@@ -8,3 +8,9 @@ When it comes to the less than operator, uninitialised doesn't matter as they wi
 ## Task
 Not necessary to read. I would use a set to store the tags, but the tests look like it will fail if it's not in order.
 
+## Output
+### Save to db
+JSON results will be reordered to be in alphabetical order
+
+### Update
+If update anywhere fails, no changes get saved.

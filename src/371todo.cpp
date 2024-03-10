@@ -201,7 +201,7 @@ int App::run(int argc, char *argv[])
 
         if (!project.containsTask(taskSplit[0]))
         {
-            std::cerr << "Error: invalid project argument(s) - project not found.";
+            std::cerr << "Error: invalid task argument(s) - task not found.";
             return 1;
         }
         Task &task = project.getTask(taskSplit[0]);
