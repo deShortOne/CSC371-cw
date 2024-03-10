@@ -112,31 +112,23 @@ void Date::setDateFromString(const std::string dateArgs)
         throw std::runtime_error("Invalid date argument, ensure format is YYYY-MM-DD, instead got '" + dateArgs + "'");
     }
 
-    try
-    {
-        std::stringstream test(dateArgs);
-        std::string yearString;
-        std::string monthString;
-        std::string dayString;
-        std::getline(test, yearString, '-');
-        std::getline(test, monthString, '-');
-        std::getline(test, dayString, '-');
+    std::stringstream test(dateArgs);
+    std::string yearString;
+    std::string monthString;
+    std::string dayString;
+    std::getline(test, yearString, '-');
+    std::getline(test, monthString, '-');
+    std::getline(test, dayString, '-');
 
-        this->year = std::stoi(yearString);
-        this->month = std::stoi(monthString);
-        this->day = std::stoi(dayString);
-        this->initialized = true;
+    this->year = std::stoi(yearString);
+    this->month = std::stoi(monthString);
+    this->day = std::stoi(dayString);
+    this->initialized = true;
 
-        if (!isValidDate(this->year, this->month, this->day))
-        {
-            resetValues();
-            throw std::runtime_error("Invalid date, got '" + dateArgs + "'");
-        }
-    }
-    catch (const std::exception &ex)
+    if (!isValidDate(this->year, this->month, this->day))
     {
         resetValues();
-        throw std::runtime_error("Unknown error, input was: " + dateArgs);
+        throw std::runtime_error("Invalid date, got '" + dateArgs + "'");
     }
 }
 
