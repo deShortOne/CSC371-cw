@@ -262,22 +262,28 @@ int App::run(int argc, char *argv[])
 
         Task &task = project.getTask(args["task"].as<std::string>());
         std::vector<std::string> tagLis = splitString(args["tag"].as<std::string>(), ',');
+        std::string invalidTags;
 
         for (const std::string &tag : tagLis)
         {
-            task.deleteTag(tag);
+            if (!task.containsTag(tag))
+            {
+                invalidTags += tag + ",";
+            }
+            if (!invalidTags.size())
+            {
+                task.deleteTag(tag);
+            }
         }
-        tlObj.save(db);
 
-        // TODO!!!!! remove multiple tags
-        // std::string tagLis = args["tag"].as<std::string>();
-        // std::stringstream test(tagLis);
-        // std::string segment;
-        // std::vector<std::string> seglist;
-        // while (std::getline(test, segment, '_'))
-        // {
-        //     task.addTag(segment);
-        // }
+        if (invalidTags.size())
+        {
+            invalidTags.pop_back();
+            std::cerr << "Error: invalid tag argument(s), invalid: " + invalidTags + ".";
+            return 1;
+        }
+
+        tlObj.save(db);
         break;
     }
     default:
