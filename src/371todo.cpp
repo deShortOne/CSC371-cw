@@ -92,6 +92,20 @@ int App::run(int argc, char *argv[])
                     task.addTag(segment);
                 }
             }
+
+            if (args.count("due"))
+            {
+                Date date{args["due"].as<std::string>()};
+                task.setDueDate(date);
+            }
+            if (args.count("completed"))
+            {
+                task.setComplete(true);
+            }
+            if (args.count("incomplete"))
+            {
+                task.setComplete(false);
+            }
             newProject.addTask(task);
         }
         tlObj.addProject(newProject);
