@@ -60,17 +60,19 @@ auto writeFileContents = [](const std::string &path,
     f << contents;
 };
 
+std::string defaultDbContent = "{ \"CSC371\": { \"Lab Assignment 1\": { \"completed\": true, "
+                               "\"dueDate\": \"2024-02-13\", \"tags\": [ \"uni\", \"c\", "
+                               "\"programming\" ] }, \"Lab Assignment 6\": { \"completed\": false, "
+                               "\"dueDate\": \"2024-04-23\", \"tags\": [ \"uni\", \"c++\", "
+                               "\"programming\", \"standard library\" ] } }, \"CSC307\": { \"Write "
+                               "Mobile App\": { \"completed\": true, \"dueDate\": \"2023-11-30\", "
+                               "\"tags\": [ \"uni\", \"programming\", \"android\" ] } } }";
+
 void resetDbFile()
 {
     writeFileContents(
         filePath,
-        "{ \"CSC371\": { \"Lab Assignment 1\": { \"completed\": true, "
-        "\"dueDate\": \"2024-02-13\", \"tags\": [ \"uni\", \"c\", "
-        "\"programming\" ] }, \"Lab Assignment 6\": { \"completed\": false, "
-        "\"dueDate\": \"2024-04-23\", \"tags\": [ \"uni\", \"c++\", "
-        "\"programming\", \"standard library\" ] } }, \"CSC307\": { \"Write "
-        "Mobile App\": { \"completed\": true, \"dueDate\": \"2023-11-30\", "
-        "\"tags\": [ \"uni\", \"programming\", \"android\" ] } } }");
+        defaultDbContent);
 }
 
 #endif
