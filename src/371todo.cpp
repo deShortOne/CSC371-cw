@@ -369,7 +369,9 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args)
  */
 void App::validateArguments(cxxopts::ParseResult &args)
 {
-    if (args.count("tag"))
+    // check docs, if due or completed or incomplete is included, must include project and task
+    bool needProjectAndTask = args.count("due") || args.count("completed") || args.count("incomplete");
+    if (args.count("tag") || needProjectAndTask)
     {
         if (!args.count("task") && !args.count("project"))
         {
