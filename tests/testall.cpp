@@ -28,3 +28,7 @@
 #include "test13Project.cpp"
 #include "test14TodoList.cpp"
 #include "test15Output.cpp"
+#include "test16Create.cpp"
+#include "test17JSON.cpp"
+#include "test18Update.cpp"
+#include "test19Delete.cpp"

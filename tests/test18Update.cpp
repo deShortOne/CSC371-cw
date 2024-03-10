@@ -28,7 +28,7 @@
 #include "../src/371todo.h"
 #include "BaseTest.h"
 
-SCENARIO("SET UP")
+SCENARIO("SET UP18")
 {
     REQUIRE(fileExists(filePath));
     REQUIRE_NOTHROW(resetDbFile());
