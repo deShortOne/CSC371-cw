@@ -53,9 +53,11 @@ int App::run(int argc, char *argv[])
     // Only uncomment this once you have implemented the load function!
     tlObj.load(db);
 
+    const Action a = parseActionArgument(args);
+
     try
     {
-        validateArguments(args);
+        validateArguments(args, a);
     }
     catch (const std::runtime_error &error)
     {
@@ -63,7 +65,6 @@ int App::run(int argc, char *argv[])
         return 1;
     }
 
-    const Action a = parseActionArgument(args);
     switch (a)
     {
     case Action::CREATE:
@@ -384,14 +385,24 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args)
 
 /**
  * Validates the existance for project, task and tag.
+ * For certain actions, validate completed, incomplete and due flag.
  *
  * @param args
  */
-void App::validateArguments(cxxopts::ParseResult &args)
+void App::validateArguments(cxxopts::ParseResult &args, Action &action)
 {
-    // check docs, if due or completed or incomplete is included, must include project and task
-    bool needProjectAndTask = args.count("due") || args.count("completed") || args.count("incomplete");
-    if (args.count("tag") || needProjectAndTask)
+    if (args.count("completed") && args.count("incomplete"))
+    {
+        throw std::runtime_error("Error: Cannot have both completed and incomplete flags.");
+    }
+
+    // check docs, if due or completed or incomplete is included, must include project and task for certain actions
+    bool completeIncompleteActionRequireProjAndTask = (args.count("completed") || args.count("incomplete")) &&
+                                                      (action == Action::CREATE || action == Action::UPDATE);
+    bool dueDateRequireProjAndTask = args.count("due") &&
+                                     (action == Action::CREATE || action == Action::UPDATE || action == Action::JSON);
+
+    if (args.count("tag") || completeIncompleteActionRequireProjAndTask || dueDateRequireProjAndTask)
     {
         if (!args.count("task") && !args.count("project"))
         {

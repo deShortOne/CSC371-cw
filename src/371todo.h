@@ -53,7 +53,7 @@ namespace App
     cxxopts::Options cxxoptsSetup();
 
     App::Action parseActionArgument(cxxopts::ParseResult &args);
-    void validateArguments(cxxopts::ParseResult &args);
+    void validateArguments(cxxopts::ParseResult &args, Action &action);
     void validateCreateArguments(cxxopts::ParseResult &args);
 
     std::vector<std::string> splitString(const std::string &string, const char delimiter);
