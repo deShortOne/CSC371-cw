@@ -232,7 +232,7 @@ bool operator==(const Project &c1, const Project &c2)
 nlohmann::json Project::json() const
 {
     using json = nlohmann::json;
-    return json::parse("{" + str() + "}");
+    return json::parse(str());
 }
 
 /**
