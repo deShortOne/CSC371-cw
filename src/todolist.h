@@ -26,8 +26,8 @@ private:
 public:
     TodoList();
     unsigned int size() const;
-    Project newProject(std::string projectIdent);
-    bool addProject(Project project);
+    Project &newProject(std::string projectIdent);
+    bool addProject(const Project &project);
     Project &getProject(std::string projectIdent);
     bool deleteProject(std::string projectIdent);
     bool containsProject(const std::string &projectIdent) const noexcept;

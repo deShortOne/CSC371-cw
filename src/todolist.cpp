@@ -37,9 +37,9 @@ unsigned int TodoList::size() const
  * @param projectIdent project identifier
  * @return Project
  */
-Project TodoList::newProject(std::string projectIdent)
+Project &TodoList::newProject(std::string projectIdent)
 {
-    for (const Project &i : todoList)
+    for (Project &i : todoList)
     {
         if (!i.getIdent().compare(projectIdent))
         {
@@ -59,7 +59,7 @@ Project TodoList::newProject(std::string projectIdent)
  * @param project to be inserted
  * @return true if project is inserted into list, false otherwise
  */
-bool TodoList::addProject(Project project)
+bool TodoList::addProject(const Project &project)
 {
     for (Project &i : this->todoList)
     {

@@ -34,16 +34,16 @@ public:
 
     Date();
     Date(std::string date);
-    void resetValues();
-    void setDateFromString(const std::string dateArgs);
-    bool isInitialised() const;
-    std::string str() const;
+    void resetValues() noexcept;
+    void setDateFromString(const std::string &dateArgs);
+    bool isInitialised() const noexcept;
+    const std::string str() const noexcept;
     void setDate(const unsigned int year, const unsigned int month, const unsigned int day);
-    unsigned int getYear() const;
-    unsigned int getMonth() const;
-    unsigned int getDay() const;
-    bool operator==(const Date &rhs) const;
-    bool operator<(const Date &rhs) const;
+    unsigned int getYear() const noexcept;
+    unsigned int getMonth() const noexcept;
+    unsigned int getDay() const noexcept;
+    bool operator==(const Date &rhs) const noexcept;
+    bool operator<(const Date &rhs) const noexcept;
 };
 
 #endif // DATE_H

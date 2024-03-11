@@ -19,10 +19,10 @@
  *
  * @param ident identifier for this task
  */
-Task::Task(std::string ident) : ident(ident),
-                                tagContainer(std::vector<std::string>()),
-                                dueDate(Date()),
-                                complete(false)
+Task::Task(const std::string &ident) : ident(ident),
+                                       tagContainer(std::vector<std::string>()),
+                                       dueDate(Date()),
+                                       complete(false)
 {
 }
 
@@ -31,7 +31,7 @@ Task::Task(std::string ident) : ident(ident),
  *
  * @return identifier
  */
-std::string Task::getIdent() const
+const std::string &Task::getIdent() const noexcept
 {
     return this->ident;
 }
@@ -41,7 +41,7 @@ std::string Task::getIdent() const
  *
  * @param ident the new identifier
  */
-void Task::setIdent(const std::string ident)
+void Task::setIdent(const std::string &ident) noexcept
 {
     this->ident = ident;
 }
@@ -52,7 +52,7 @@ void Task::setIdent(const std::string ident)
  * @param tag tag to be inserted
  * @return true if tag is added
  */
-bool Task::addTag(const std::string tag)
+bool Task::addTag(const std::string &tag) noexcept
 {
     if (containsTag(tag))
     {
@@ -69,7 +69,7 @@ bool Task::addTag(const std::string tag)
  * @param tag tag to be removed
  * @return true if tag is removed
  */
-bool Task::deleteTag(const std::string tag)
+bool Task::deleteTag(const std::string &tag)
 {
     if (!containsTag(tag))
     {
@@ -92,7 +92,7 @@ bool Task::deleteTag(const std::string tag)
  *
  * @return unsigned int of tags stored
  */
-unsigned int Task::numTags() const
+const unsigned int Task::numTags() const noexcept
 {
     return this->tagContainer.size();
 }
@@ -103,7 +103,7 @@ unsigned int Task::numTags() const
  * @param tag the tag to find
  * @return returns true if tag exists in list, false otherwise
  */
-bool Task::containsTag(const std::string tag) const
+bool Task::containsTag(const std::string &tag) const noexcept
 {
     for (std::string tagItem : tagContainer)
     {
@@ -120,7 +120,7 @@ bool Task::containsTag(const std::string tag) const
  *
  * @return std::set<std::string>
  */
-std::vector<std::string> Task::getTags() const
+const std::vector<std::string> Task::getTags() const noexcept
 {
     return tagContainer;
 }
@@ -130,7 +130,7 @@ std::vector<std::string> Task::getTags() const
  *
  * @return date object
  */
-Date &Task::getDueDate()
+Date &Task::getDueDate() noexcept
 {
     return dueDate;
 }
@@ -140,7 +140,7 @@ Date &Task::getDueDate()
  *
  * @param dueDate due date to be stored
  */
-void Task::setDueDate(const Date &dueDate)
+void Task::setDueDate(const Date &dueDate) noexcept
 {
     this->dueDate = dueDate;
 }
@@ -150,7 +150,7 @@ void Task::setDueDate(const Date &dueDate)
  *
  * @param isComplete bool if task is complete
  */
-void Task::setComplete(const bool isComplete)
+void Task::setComplete(const bool isComplete) noexcept
 {
     this->complete = isComplete;
 }
@@ -160,7 +160,7 @@ void Task::setComplete(const bool isComplete)
  *
  * @return bool isComplete
  */
-bool Task::isComplete() const
+bool Task::isComplete() const noexcept
 {
     return this->complete;
 }
@@ -171,7 +171,7 @@ bool Task::isComplete() const
  * @param rhs task to compare
  * @return true if tasks are the same, false otherwise
  */
-bool Task::operator==(const Task &rhs) const
+bool Task::operator==(const Task &rhs) const noexcept
 {
     return rhs.ident == this->ident &&
            rhs.tagContainer == this->tagContainer &&
@@ -184,7 +184,7 @@ bool Task::operator==(const Task &rhs) const
  *
  * @return JSON represention of task
  */
-std::string Task::str() const
+std::string Task::str() const noexcept
 {
     std::stringstream ss;
     ss << "{"

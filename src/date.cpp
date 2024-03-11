@@ -81,7 +81,7 @@ Date::Date(std::string date)
 /**
  * Reset date to unitialised date.
  */
-void Date::resetValues()
+void Date::resetValues() noexcept
 {
     this->year = 0;
     this->month = 0;
@@ -97,7 +97,7 @@ void Date::resetValues()
  * @param dateArgs format is YYYY-MM-DD
  * @throw runtime_error if date is invalid
  */
-void Date::setDateFromString(const std::string dateArgs)
+void Date::setDateFromString(const std::string &dateArgs)
 {
     if (!dateArgs.length())
     {
@@ -137,7 +137,7 @@ void Date::setDateFromString(const std::string dateArgs)
  *
  * @return true if object is initialised.
  */
-bool Date::isInitialised() const
+bool Date::isInitialised() const noexcept
 {
     return this->initialized;
 }
@@ -146,7 +146,7 @@ bool Date::isInitialised() const
  *
  * @return std::string representation of the Date object in YYYY-MM-DD format
  */
-std::string Date::str() const
+const std::string Date::str() const noexcept
 {
     if (!isInitialised())
     {
@@ -191,7 +191,7 @@ void Date::setDate(const unsigned int year, const unsigned int month, const unsi
  *
  * @return year
  */
-unsigned int Date::getYear() const
+unsigned int Date::getYear() const noexcept
 {
     return initialized ? this->year : 0;
 }
@@ -201,7 +201,7 @@ unsigned int Date::getYear() const
  *
  * @return month
  */
-unsigned int Date::getMonth() const
+unsigned int Date::getMonth() const noexcept
 {
     return initialized ? this->month : 0;
 }
@@ -211,7 +211,7 @@ unsigned int Date::getMonth() const
  *
  * @return day
  */
-unsigned int Date::getDay() const
+unsigned int Date::getDay() const noexcept
 {
     return initialized ? this->day : 0;
 }
@@ -222,7 +222,7 @@ unsigned int Date::getDay() const
  * @param rhs other date to compare with
  * @return true if other date is the same
  */
-bool Date::operator==(const Date &rhs) const
+bool Date::operator==(const Date &rhs) const noexcept
 {
     return rhs.initialized == this->initialized &&
            rhs.day == this->day &&
@@ -235,7 +235,7 @@ bool Date::operator==(const Date &rhs) const
  *
  * @return true if first date is chronologically before second
  */
-bool Date::operator<(const Date &rhs) const
+bool Date::operator<(const Date &rhs) const noexcept
 {
     if (this->year != rhs.year)
     {

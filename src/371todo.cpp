@@ -389,7 +389,7 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args)
  *
  * @param args
  */
-void App::validateArguments(cxxopts::ParseResult &args, Action &action)
+void App::validateArguments(cxxopts::ParseResult &args, const Action &action)
 {
     if (args.count("completed") && args.count("incomplete"))
     {
