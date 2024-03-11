@@ -130,24 +130,18 @@ bool Project::containsTask(const std::string &tIdent) const noexcept
  */
 bool Project::addTask(Task task)
 {
-    TaskContainer::iterator taskWithSameIdentifier;
-    for (taskWithSameIdentifier = tasks.begin(); taskWithSameIdentifier != tasks.end(); taskWithSameIdentifier++)
+    for (Task &taskCurr : tasks)
     {
-        if (taskWithSameIdentifier->getIdent() == task.getIdent())
+        if (taskCurr.getIdent() == task.getIdent())
         {
-            break;
+            for (const std::string &i : task.getTags())
+            {
+                taskCurr.addTag(i);
+            }
+            taskCurr.setComplete(task.isComplete());
+            taskCurr.setDueDate(task.getDueDate());
+            return false;
         }
-    }
-
-    if (taskWithSameIdentifier != this->tasks.end()) // found
-    {
-        for (const std::string &i : task.getTags())
-        {
-            taskWithSameIdentifier->addTag(i);
-        }
-        taskWithSameIdentifier->setComplete(task.isComplete());
-        taskWithSameIdentifier->setDueDate(task.getDueDate());
-        return false;
     }
 
     this->tasks.push_back(task);
