@@ -173,8 +173,7 @@ bool TodoList::load(std::string filename)
             {
                 std::string jsonToDate = taskValues["dueDate"].dump();
                 std::string dateArgs = jsonToDate.substr(1, jsonToDate.length() - 2);
-                Date date{};
-                date.setDateFromString(dateArgs);
+                Date date{dateArgs};
                 newTask.setDueDate(date);
             }
             if (taskValues.contains("tags"))
