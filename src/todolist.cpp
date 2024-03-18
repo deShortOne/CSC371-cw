@@ -151,6 +151,12 @@ bool TodoList::containsProject(const std::string &projectIdent) const noexcept
 bool TodoList::load(std::string filename)
 {
     std::ifstream f(filename);
+    if (!f)
+    {
+        std::cout << "File does not exist" << std::endl;
+        f.close();
+        return false;
+    }
     if (f.peek() == std::ifstream::traits_type::eof()) // empty file
     {
         f.close();
