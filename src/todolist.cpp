@@ -150,8 +150,12 @@ bool TodoList::containsProject(const std::string &projectIdent) const noexcept
 
 bool TodoList::load(std::string filename)
 {
-    using json = nlohmann::json;
     std::ifstream f(filename);
+    if (f.peek() == std::ifstream::traits_type::eof()) // empty file
+    {
+        f.close();
+        return false;
+    }
     json data = json::parse(f);
     f.close();
 

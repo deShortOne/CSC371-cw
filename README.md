@@ -8,6 +8,10 @@ When it comes to the less than operator, uninitialised doesn't matter as they wi
 ## Task
 Not necessary to read. I would use a set to store the tags, but the tests look like it will fail if it's not in order.
 
+## TodoList
+### Load
+Empty files will create empty lists instead of throw json errors.
+
 ## Output
 ### Save to db
 JSON results will be reordered to be in alphabetical order
