@@ -162,8 +162,18 @@ bool TodoList::load(std::string filename)
         f.close();
         return false;
     }
-    json data = json::parse(f);
-    f.close();
+    json data;
+    try
+    {
+        data = json::parse(f);
+        f.close();
+    }
+    catch (const detail::exception &ex)
+    {
+        std::cerr << "Invalid json: " << ex.what() << std::endl;
+        f.close();
+        return false;
+    }
 
     for (json::iterator project_iter = data.begin(); project_iter != data.end(); ++project_iter)
     {
